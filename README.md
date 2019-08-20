@@ -2,13 +2,17 @@
 A brainfuck interpreter with a compressor halving file size.
 
 Compressor:
+
 Brainfuck only uses 8 operators:
+
 < > , . + - [ ]
 
 Each operator is a char, each char is a byte.
+
 A byte can represent 256 different values, yet brainfuck only uses 8.
 
 Lets take this very simple program '++[-].' .
+
 This program will loop twice and print '0'.
 
 The binary representation of this program is (ASCII):
@@ -35,6 +39,7 @@ Now we don't want our values to be this high, so we create our own encoding for 
 Any order will do, this is just an example.
 
 Now you might ask: "we still have an unused bit!".
+
 Yes we do, we'll get to that.
 
 So, our program - using our own encoding - becomes:
@@ -42,6 +47,7 @@ So, our program - using our own encoding - becomes:
 00000100 00000100 00000110 00000101 00000111 00000011
 
 They are the same size, but now we have a bunch of zeros as padding, which we can utilize.
+
 The compressor bit shifts the (i*2) value into the (i) value, where 'i' stands for the current index (increments of 2) in the byte array.
 
 So the program becomes:
