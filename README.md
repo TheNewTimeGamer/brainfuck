@@ -16,24 +16,18 @@ Lets take this very simple program '++[-].' .
 This program will loop twice and print '0'.
 
 The binary representation of this program is (ASCII):
+
 00101011 00101011 01011011 00101101 01011101 00101110
 
 Now we don't want our values to be this high, so we create our own encoding for our brainfuck code, lets take:
 
 \< = 0 (0000)
-
 \> = 1 (0001)
-
 \, = 2 (0010)
-
 \. = 3 (0011)
-
 \+ = 4 (0100)
-
 \- = 5 (0101)
-
 \[ = 6 (0110)
-
 \] = 7 (0111)
 
 Any order will do, this is just an example.
@@ -62,7 +56,8 @@ So the program becomes:
 
 I.E: half its previous size.
 
-Now about the unused bit:
+Now about the unused bits:
+
 If we were to take the current setup we would only need 3 bits per operator.
 This would result in only needing 6 bits per byte, so we could make the program 37.5% its original size!
 Of course, because we would be splitting the operators between bytes we would for a program whos length is not to the power of 6 also need to add one padding byte, which contains the remaining half of the last operator.
