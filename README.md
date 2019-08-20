@@ -15,12 +15,16 @@ The binary representation of this program is (ASCII):
 00101011 00101011 01011011 00101101 01011101 00101110
 
 Now we don't want our values to be this high, so we create our own encoding for our brainfuck code, lets take:
- _____________________________
-| < = 0 (0000)   > = 1 (0001) |
-| , = 2 (0010)   . = 3 (0011) |
-| + = 4 (0100)   - = 5 (0101) |
-| [ = 6 (0110)   ] = 7 (0111) |
-|_____________________________|
+
+< = 0 (0000)
+> = 1 (0001)
+, = 2 (0010)
+. = 3 (0011)
++ = 4 (0100)
+- = 5 (0101)
+[ = 6 (0110)
+] = 7 (0111)
+
 Any order will do, this is just an example.
 
 Now you might ask: "we still have an unused bit!".
@@ -33,10 +37,13 @@ They are the same size, but now we have a bunch of zeros as padding, which we ca
 The compressor bit shifts the (i*2) value into the (i) value, where 'i' stands for the current index (increments of 2) in the byte array.
 
 So the program becomes:
+
 00000100 | 00000100 << 4 = 01000100
+
 00000110 | 00000101 << 4 = 01010110
+
 00000111 | 00000011 << 4 = 00110111
-___________________________________ =
+
 01000100 01010110 00110111
 
 I.E: half its previous size.
