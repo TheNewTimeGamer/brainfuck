@@ -22,12 +22,19 @@ The binary representation of this program is (ASCII):
 Now we don't want our values to be this high, so we create our own encoding for our brainfuck code, lets take:
 
 \< = 0 (0000)
+
 \> = 1 (0001)
+
 \, = 2 (0010)
+
 \. = 3 (0011)
+
 \+ = 4 (0100)
+
 \- = 5 (0101)
+
 \[ = 6 (0110)
+
 \] = 7 (0111)
 
 Any order will do, this is just an example.
