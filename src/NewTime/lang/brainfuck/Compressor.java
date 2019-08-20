@@ -1,17 +1,100 @@
 package NewTime.lang.brainfuck;
 
-import java.util.Arrays;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class Compressor {
 
 	public static void main(String[] args) {
-		byte[] operators = {1,0,1,0,1,1,0};
-		System.out.println(Arrays.toString(operators));
 		Compressor compressor = new Compressor();
-		byte[] compressed = compressor.compress(operators);
-		byte[] decompressed = compressor.decompress(compressed);
-		System.out.println(Arrays.toString(compressed));
-		System.out.println(Arrays.toString(decompressed));
+		byte[] operators = compressor.compressFile(new File("res/example.txt"), new File("res/example_compressed.txt"));
+		compressor.decompressFile(new File("res/example_compressed.txt"), new File("res/example_decompressed.txt"));
+	}
+	
+	public byte[] compressFile(File input, File output) {
+		byte[] buffer = null;
+		try {
+			buffer = new byte[(int) input.length()];
+			DataInputStream in = new DataInputStream(new FileInputStream(input));
+			in.read(buffer);
+			
+			buffer = clean(buffer);
+			buffer = compress(buffer);
+			
+			DataOutputStream out = new DataOutputStream(new FileOutputStream(output));
+			out.write(buffer);
+			out.flush();
+			out.close();			
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+				
+		return buffer;
+	}
+	
+	public byte[] decompressFile(File input, File output) {
+		byte[] buffer = null;
+		try {
+			buffer = new byte[(int) input.length()];
+			DataInputStream in = new DataInputStream(new FileInputStream(input));
+			in.read(buffer);
+			
+			buffer = clean(buffer);
+			buffer = decompress(buffer);
+			buffer = decode(buffer);
+			
+			DataOutputStream out = new DataOutputStream(new FileOutputStream(output));
+			out.write(buffer);
+			out.flush();
+			out.close();			
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+				
+		return buffer;
+	}
+	
+	public byte[] clean(byte[] buffer) {
+		String raw = new String(buffer);
+		raw = raw.replace("\r", "");
+		raw = raw.replace("\n", "");
+		raw = raw.replace("\r", "");
+		raw.trim();
+		return raw.getBytes();
+	}
+	
+	public byte[] encode(byte[] buffer) {		
+		for(int i = 0; i < buffer.length; i++) {
+			byte b = buffer[i];
+			if(b == (byte)'<') {buffer[i] = 0; continue;}
+			if(b == (byte)'>') {buffer[i] = 1; continue;}
+			if(b == (byte)'+') {buffer[i] = 2; continue;}
+			if(b == (byte)'-') {buffer[i] = 3; continue;}
+			if(b == (byte)',') {buffer[i] = 4; continue;}
+			if(b == (byte)'.') {buffer[i] = 5; continue;}
+			if(b == (byte)'[') {buffer[i] = 6; continue;}
+			if(b == (byte)']') {buffer[i] = 7; continue;}	
+		}
+		return buffer;
+	}
+	
+	public byte[] decode(byte[] buffer) {
+		for(int i = 0; i < buffer.length; i++) {
+			byte b = buffer[i];
+			if(b == 0) {buffer[i] = '<'; continue;}
+			if(b == 1) {buffer[i] = '>'; continue;}
+			if(b == 2) {buffer[i] = '+'; continue;}
+			if(b == 3) {buffer[i] = '-'; continue;}
+			if(b == 4) {buffer[i] = ','; continue;}
+			if(b == 5) {buffer[i] = '.'; continue;}
+			if(b == 6) {buffer[i] = '['; continue;}
+			if(b == 7) {buffer[i] = ']'; continue;}		
+		}
+		return buffer;
 	}
 	
 	public byte[] compress(byte[] operators) {
@@ -46,7 +129,9 @@ public class Compressor {
 			byte start = (byte) ((operators[i] << (8*3+4)) >> (8*3+4));
 			byte end = (byte) (operators[i] >> 4);
 			
-			buffer[i*2] = start;
+			if(i*2 < buffer.length) {
+				buffer[i*2] = start;
+			}
 			if(i*2+1 < buffer.length) {
 				buffer[i*2+1] = end;
 			}
