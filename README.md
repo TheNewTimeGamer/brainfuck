@@ -81,5 +81,5 @@ But currently I am quite content and mainly because a lot of brainfuck implement
 
 The most notable of which is an EOF-operator.
 
-Thats why this last bit is not used, just in case somebody wants to compress a brainfuck program which had more than 8 operators.
+Thats why this last bit is not used, just in case somebody wants to compress a brainfuck program which has more than 8 operators.
 
