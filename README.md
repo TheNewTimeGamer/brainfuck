@@ -67,11 +67,19 @@ Now about the unused bits:
 
 If we were to take the current setup we would only need 3 bits per operator.
 This would result in only needing 6 bits per byte, so we could make the program 37.5% its original size!
-Of course, because we would be splitting the operators between bytes we would for a program whos length is not to the power of 6 also need to add one padding byte, which contains the remaining half of the last operator.
+
+Of course, because we would be splitting the operators between bytes we would - for a program whos length is not to the power of 6 - also need to add one padding byte, which contains the remaining half of the last operator.
+
 Still, an amazing result!
 
+
+
 Now, I might support this amazing 37.5% at a later date if I feel like it (Make it an optional parameter).
+
+
 But currently I am quite content and mainly because a lot of brainfuck implementations use an extra operator.
+
 The most notable of which is an EOF-operator.
+
 Thats why this last bit is not used, just in case somebody wants to compress a brainfuck program which had more than 8 operators.
 
