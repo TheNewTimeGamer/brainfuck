@@ -29,7 +29,7 @@ public class BrainFuck {
 			if(b < 10) {System.out.print(" ");}
 			if(b < 100) {System.out.print(" ");}
 			System.out.print(b + "|");
-			if(i != 0 && i % 16 == 0) {
+			if(i != 0 && (i+1) % 16 == 0) {
 				System.out.println("");
 			}
 		}
