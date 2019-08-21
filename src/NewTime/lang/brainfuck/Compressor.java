@@ -37,7 +37,7 @@ public class Compressor {
 	public static void main(String[] args) {
 		Compressor compressor = new Compressor();
 		compressor.compressFile(new File("res/example.txt"), new File("res/example_compressed.txt"));
-		byte[] newOps = compressor.decompressFile(new File("res/example_compressed.txt"), null);
+		byte[] newOps = compressor.decompressFile(new File("res/example_compressed.txt"), new File("res/example_decompressed.txt"));
 		BrainFuck test = new BrainFuck(new String(newOps));
 	}
 
