@@ -3,7 +3,7 @@ A brainfuck interpreter with a compressor halving file size.
 
 Interpreter:
 
-Interpreter might not run every program as expected, currenly working on new version.
+Interpreter might not run every program as expected, currently working on new version.
 
 
 
