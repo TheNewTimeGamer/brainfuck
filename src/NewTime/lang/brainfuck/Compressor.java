@@ -11,8 +11,20 @@ public class Compressor {
 
 	public static void main(String[] args) {
 		Compressor compressor = new Compressor();
-		byte[] operators = compressor.compressFile(new File("res/example.txt"), new File("res/example_compressed.txt"));
-		compressor.decompressFile(new File("res/example_compressed.txt"), new File("res/example_decompressed.txt"));
+		try {
+			File file = new File("res/example.txt");
+			byte[] buffer = new byte[(int) file.length()];
+			DataInputStream in = new DataInputStream(new FileInputStream(file));
+			in.read(buffer);
+			String code = new String(buffer);
+			BrainFuck test = new BrainFuck(new String(code));
+			System.out.println("\n"+new String(code));
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		compressor.compressFile(new File("res/example.txt"), new File("res/example_compressed.txt"));
+		byte[] newOps = compressor.decompressFile(new File("res/example_compressed.txt"), new File("res/example_decompressed.txt"));
+		System.out.println(new String(newOps));
 	}
 	
 	public byte[] compressFile(File input, File output) {
@@ -22,6 +34,7 @@ public class Compressor {
 			DataInputStream in = new DataInputStream(new FileInputStream(input));
 			in.read(buffer);
 			
+			buffer = encode(buffer);
 			buffer = clean(buffer);
 			buffer = compress(buffer);
 			
@@ -47,10 +60,12 @@ public class Compressor {
 			buffer = decompress(buffer);
 			buffer = decode(buffer);
 			
-			DataOutputStream out = new DataOutputStream(new FileOutputStream(output));
-			out.write(buffer);
-			out.flush();
-			out.close();			
+			if(output != null) {
+				DataOutputStream out = new DataOutputStream(new FileOutputStream(output));
+				out.write(buffer);
+				out.flush();
+				out.close();		
+			}
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -78,6 +93,7 @@ public class Compressor {
 			if(b == (byte)'.') {buffer[i] = 5; continue;}
 			if(b == (byte)'[') {buffer[i] = 6; continue;}
 			if(b == (byte)']') {buffer[i] = 7; continue;}	
+			if(b == (byte)' ') {b = (byte)' ';}			
 		}
 		return buffer;
 	}
@@ -123,7 +139,7 @@ public class Compressor {
 		if(operators[operators.length-1] < 8) {
 			buffer = new byte[operators.length*2-1];
 		}else {
-			buffer = new byte[operators.length];
+			buffer = new byte[operators.length*2];
 		}		
 		for(int i = 0; i < operators.length; i++) {
 			byte start = (byte) ((operators[i] << (8*3+4)) >> (8*3+4));

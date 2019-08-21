@@ -13,12 +13,7 @@ public class BrainFuck {
 	public static final byte READ		 = ((byte)',');
 	public static final byte LOOP_START	 = ((byte)'[');
 	public static final byte LOOP_END	 = ((byte)']');
-	
-	public static void main(String[] args) {
-		String code = ">-[[<+>>>-<-<+]>]";
-		new BrainFuck(code);
-	}
-	
+		
 	public BrainFuck(String code) {
 		byte[] operators = new byte[code.length()];
 		char[] chars = code.toCharArray();
