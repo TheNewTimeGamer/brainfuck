@@ -1,6 +1,12 @@
 # brainfuck
 A brainfuck interpreter with a compressor halving file size.
 
+Interpreter:
+
+Interpreter might not run every program as expected, currenly working on new version.
+
+
+
 Compressor:
 
 Brainfuck only uses 8 operators:
