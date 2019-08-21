@@ -9,28 +9,62 @@ import java.io.IOException;
 
 public class Compressor {
 
+	/*
+	 * Compressor (de-)compresses brainfuck code..
+	 * 
+	 * When compressing bainfuck code the following happens:
+	 * 		First the code is translated into "brainfuck encoding" using the  "encode" method.
+	 *  	Then the code is cleaned using the "clean" method to remove any unwanted characters.
+	 * 		Finally the code is compressed using the "compress" method.
+	 * 
+	 * When decompressing brainfuck code the following happens:
+	 * 		First the code is cleaned using the "clean" method to remove any unwanted characters.
+	 * 		Then the code is decompressed using the "decompress" method.
+	 * 		Finally the code is decoded from "brainfuck encoding" into utf-8.
+	 * 
+	 * Extra:
+	 * 		compressFile:
+	 * 			Load an input file, do all the stuff and output it to the given output file.
+	 * 			If no output file is given, don't output to any file.
+	 * 			Returns the compressed code.
+	 * 
+	 * 		decompressFile:
+	 * 			Load the input file, do all the stuff and output it to the given output file.
+	 * 			If no output file is given, don't output to any file.
+	 * 			Returns the decompressed code.
+	 */
+	
 	public static void main(String[] args) {
 		Compressor compressor = new Compressor();
 		compressor.compressFile(new File("res/example.txt"), new File("res/example_compressed.txt"));
-		byte[] newOps = compressor.decompressFile(new File("res/example_compressed.txt"), new File("res/example_decompressed.txt"));
+		byte[] newOps = compressor.decompressFile(new File("res/example_compressed.txt"), null);
 		BrainFuck test = new BrainFuck(new String(newOps));
 	}
-	
+
+	/**
+	 * Compress a brainfuck file.
+	 * @param input File to be compressed.
+	 * @param output File to which the compressed data should be written. If null, write to input file.
+	 * @return byte array containing the compressed data.
+	 */
 	public byte[] compressFile(File input, File output) {
 		byte[] buffer = null;
 		try {
 			buffer = new byte[(int) input.length()];
 			DataInputStream in = new DataInputStream(new FileInputStream(input));
 			in.read(buffer);
+			in.close();
 			
 			buffer = encode(buffer);
 			buffer = clean(buffer);
 			buffer = compress(buffer);
 			
-			DataOutputStream out = new DataOutputStream(new FileOutputStream(output));
-			out.write(buffer);
-			out.flush();
-			out.close();			
+			if(output != null) {
+				DataOutputStream out = new DataOutputStream(new FileOutputStream(output));
+				out.write(buffer);
+				out.flush();
+				out.close();		
+			}
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -38,12 +72,19 @@ public class Compressor {
 		return buffer;
 	}
 	
+	/**
+	 * Decompress a compressed brainfuck file.
+	 * @param input	File to be decompressed.
+	 * @param output File to which the decompressed data should be written. If null, don't write to any file, just return the decompressed data.
+	 * @return byte array containing the decompressed data.
+	 */
 	public byte[] decompressFile(File input, File output) {
 		byte[] buffer = null;
 		try {
 			buffer = new byte[(int) input.length()];
 			DataInputStream in = new DataInputStream(new FileInputStream(input));
 			in.read(buffer);
+			in.close();
 			
 			buffer = clean(buffer);
 			buffer = decompress(buffer);
@@ -62,6 +103,11 @@ public class Compressor {
 		return buffer;
 	}
 	
+	/**
+	 * Remove any annoying characters.
+	 * @param buffer byte array containing the code to be cleaned.
+	 * @return byte array containing clean code.
+	 */
 	public byte[] clean(byte[] buffer) {
 		String raw = new String(buffer);
 		raw = raw.replace("\r", "");
@@ -71,6 +117,11 @@ public class Compressor {
 		return raw.getBytes();
 	}
 	
+	/**
+	 * Encode the given byte array to follow "brainfuck encoding".
+	 * @param buffer byte array to be encoded.
+	 * @return byte array encoded in "brainfuck encoding".
+	 */
 	public byte[] encode(byte[] buffer) {		
 		for(int i = 0; i < buffer.length; i++) {
 			byte b = buffer[i];
@@ -87,6 +138,11 @@ public class Compressor {
 		return buffer;
 	}
 	
+	/**
+	 * Decode the given byte array from "brainfuck encoding" back to utf-8.
+	 * @param buffer byte array to be decoded.
+	 * @return byte array encoded in utf-8
+	 */
 	public byte[] decode(byte[] buffer) {
 		for(int i = 0; i < buffer.length; i++) {
 			byte b = buffer[i];
@@ -102,6 +158,11 @@ public class Compressor {
 		return buffer;
 	}
 	
+	/**
+	 * Compress the given byte array.
+	 * @param operators byte array to be compressed.
+	 * @return byte array containing compressed operators.
+	 */
 	public byte[] compress(byte[] operators) {
 		byte[] buffer = null;
 		if(operators.length % 2 == 0) {
@@ -123,6 +184,11 @@ public class Compressor {
 		return buffer;
 	}
 	
+	/**
+	 * Decompress the given byte array.
+	 * @param operators byte array to be decompressed.
+	 * @return byte array containing decompressed operators.
+	 */
 	public byte[] decompress(byte[] operators) {
 		byte[] buffer = null;
 		if(operators[operators.length-1] < 8) {
