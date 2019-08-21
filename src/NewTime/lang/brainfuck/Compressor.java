@@ -11,20 +11,9 @@ public class Compressor {
 
 	public static void main(String[] args) {
 		Compressor compressor = new Compressor();
-		try {
-			File file = new File("res/example.txt");
-			byte[] buffer = new byte[(int) file.length()];
-			DataInputStream in = new DataInputStream(new FileInputStream(file));
-			in.read(buffer);
-			String code = new String(buffer);
-			BrainFuck test = new BrainFuck(new String(code));
-			System.out.println("\n"+new String(code));
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
 		compressor.compressFile(new File("res/example.txt"), new File("res/example_compressed.txt"));
 		byte[] newOps = compressor.decompressFile(new File("res/example_compressed.txt"), new File("res/example_decompressed.txt"));
-		System.out.println(new String(newOps));
+		BrainFuck test = new BrainFuck(new String(newOps));
 	}
 	
 	public byte[] compressFile(File input, File output) {

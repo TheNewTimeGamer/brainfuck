@@ -68,7 +68,7 @@ Now about the unused bits:
 If we were to take the current setup we would only need 3 bits per operator.
 This would result in only needing 6 bits per byte, so we could make the program 37.5% its original size!
 
-Of course, because we would be splitting the operators between bytes we would - for a program whos length is not to the power of 6 - also need to add one padding byte, which contains the remaining half of the last operator.
+Of course, because we would be splitting the operators between bytes we would - for a program whos length is not a multiplication of 6 - also need to add one padding byte, which contains the remaining bits of the last operator.
 
 Still, an amazing result!
 
